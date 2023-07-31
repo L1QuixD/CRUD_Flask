@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Machine Learning Prediction</title>
+</head>
+<body>
+    <h1>Machine Learning Prediction</h1>
+    <form id="predictionForm">
+        <label for="featureInput">Enter Feature:</label>
+        <input type="text" id="featureInput" name="feature" required>
+        <button type="submit">Predict</button>
+    </form>
+    <div id="predictionResult"></div>
+
+    <script>
+        const predictionForm = document.getElementById('predictionForm');
+        const predictionResultDiv = document.getElementById('predictionResult');
+
+        predictionForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const featureInput = document.getElementById('featureInput').value;
+
+            // Send API request to Flask backend
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'features': [parseFloat(featureInput)] })
+            })
+            .then(response => response.json())
+            .then(data => {
+                predictionResultDiv.innerText = `Prediction: ${data.prediction}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
